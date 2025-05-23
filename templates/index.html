@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XIRR Calculation</title>
+</head>
+<body>
+    <h2>Calculate XIRR for a Member</h2>
+    <form action="/calculate" method="post">
+        <label for="member_id">Select Member ID:</label>
+        <select name="member_id" id="member_id">
+            {% for member_id in member_ids %}
+                <option value="{{ member_id }}">{{ member_id }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Calculate XIRR</button>
+    </form>
+
+    <br><br>
+
+    <h2>Calculate XIRR for All Members</h2>
+    <a href="/calculate_all"><button>Calculate for All Members</button></a>
+</body>
+</html>

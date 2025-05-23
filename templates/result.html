@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XIRR Result</title>
+</head>
+<body>
+    <h2>XIRR Calculation Result</h2>
+    <p><strong>Member ID:</strong> {{ member_id }}</p>
+
+    {% if xirr %}
+        <p><strong>XIRR:</strong> {{ xirr }}</p>
+    {% elif error %}
+        <p><strong>Error:</strong> {{ error }}</p>
+    {% endif %}
+
+    <br><br>
+    <a href="/">Calculate Again</a>
+</body>
+</html>

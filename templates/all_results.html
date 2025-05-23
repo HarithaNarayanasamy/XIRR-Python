@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XIRR Results for All Members</title>
+</head>
+<body>
+    <h2>XIRR Results for All Members</h2>
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Member ID</th>
+                <th>XIRR (%)</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+            <tr>
+                <td>{{ result.member_id }}</td>
+                <td>
+                    {% if result.xirr %}
+                        {{ result.xirr }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    {% if result.error %}
+                        {{ result.error }}
+                    {% else %}
+                        Success
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br><br>
+    <a href="/">Back to Home</a>
+</body>
+</html>
