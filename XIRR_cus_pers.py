@@ -1,10 +1,3 @@
-# Define or load your MongoDB connection string
-MONGO_URI = "mongodb+srv://username:password@cluster0.mongodb.net/mydatabase?retryWrites=true&w=majority"
-
-# Print the URI to verify
-print("MONGO_URI being used:", MONGO_URI)
-
-
 from flask import Flask, render_template, request
 from pymongo import MongoClient
 from scipy.optimize import newton
@@ -16,12 +9,15 @@ from dotenv import load_dotenv
 # Load environment variables from .env
 load_dotenv()
 
+# Flask app setup
 app = Flask(__name__)
 
 # Function to get Mongo collection safely
 @lru_cache()
 def get_collection():
     mongo_uri = os.getenv("MONGO_URI")
+    if not mongo_uri:
+        raise ValueError("MONGO_URI not found in environment variables.")
     client = MongoClient(mongo_uri)
     db = client['MyData']
     return db['DataMine']
@@ -80,8 +76,8 @@ def calculate_all():
             results.append({'member_id': member_id, 'xirr': None, 'error': "Insufficient data"})
             continue
 
-        cashflows = [record['InstallmentAmount'] for record in records]
-        dates = [record['InstallmentDate'] for record in records]
+        cashflows = [float(record['InstallmentAmount']) for record in records]
+        dates = [record['InstallmentDate'] if isinstance(record['InstallmentDate'], datetime) else datetime.strptime(record['InstallmentDate'], "%Y-%m-%d") for record in records]
 
         if len(set(dates)) == 1 or all(cf >= 0 for cf in cashflows) or all(cf <= 0 for cf in cashflows):
             results.append({'member_id': member_id, 'xirr': None, 'error': "Invalid data"})
@@ -97,4 +93,5 @@ def calculate_all():
     return render_template('all_results.html', results=results)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Use the port Render provides
+    app.run(host='0.0.0.0', port=port, debug=True)
